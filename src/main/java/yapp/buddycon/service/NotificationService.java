@@ -1,8 +1,10 @@
 package yapp.buddycon.service;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import yapp.buddycon.infra.entity.Gifticon;
@@ -13,7 +15,9 @@ import yapp.buddycon.infra.repository.GifticonExpirationAlertNotiRepository;
 import yapp.buddycon.infra.repository.GifticonRepository;
 import yapp.buddycon.infra.repository.NotificationRepository;
 import yapp.buddycon.infra.repository.NotificationSettingRepository;
+import yapp.buddycon.service.dto.GifticonExpirationAlertNotificationDto;
 
+@Slf4j
 @RequiredArgsConstructor
 @Component
 public class NotificationService {
@@ -55,6 +59,26 @@ public class NotificationService {
         );
       }
     }
+  }
+
+  @Transactional
+  public void sendNotificationPush() {
+    List<GifticonExpirationAlertNotificationDto> notificationList =
+        gifticonExpirationAlertNotiRepository.findAllGifticonAlertNotificationForPush();
+
+    List<Long> idList = new ArrayList<>();
+    for (GifticonExpirationAlertNotificationDto n : notificationList) {
+      try {
+        // TODO 푸시 전송
+
+        idList.add(n.notificiationId());
+
+      } catch (Exception e) {
+        log.error("푸시 전송 실패: {}", e.getMessage());
+      }
+    }
+
+    notificationRepository.updateAllById(idList);
   }
 
 }

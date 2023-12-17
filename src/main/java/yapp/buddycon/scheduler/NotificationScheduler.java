@@ -13,7 +13,8 @@ public class NotificationScheduler {
 
 //  @Scheduled(cron = "0/3 * * * * ?")
 //  public void sendFourteenNotification() {
-//    notificationService.createNotifications(14);
+////    notificationService.createNotifications(14);
+//    notificationService.sendNotificationPush();
 //  }
 
   @Scheduled(cron = "0 0 1 * * ?")
@@ -39,6 +40,11 @@ public class NotificationScheduler {
   @Scheduled(cron = "0 40 1 * * ?")
   public void createNotificationOnTheDay() {
     notificationService.createNotifications(0);
+  }
+
+  @Scheduled(cron = "0 0 8 * * ?")
+  public void sendNotificationPush() {
+    notificationService.sendNotificationPush();
   }
 
 }
