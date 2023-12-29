@@ -5,6 +5,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 import org.springframework.batch.item.ItemWriter;
+import org.springframework.orm.jpa.EntityManagerFactoryUtils;
 import yapp.buddycon.domain.Gifticon;
 import yapp.buddycon.domain.GifticonExpirationAlertNoti;
 import yapp.buddycon.domain.Notification;
@@ -19,18 +20,16 @@ public class CustomItemWriter implements ItemWriter<Gifticon> {
 
   @Override
   public void write(List<? extends Gifticon> items) throws Exception {
-    EntityManager entityManager = emf.createEntityManager();
-    EntityTransaction tx = entityManager.getTransaction();
-    tx.begin();
+    EntityManager em = EntityManagerFactoryUtils.getTransactionalEntityManager(emf);
 
     for (Gifticon gifticon : items) {
       Notification notification = Notification.create();
-      entityManager.persist(notification);
+      em.persist(notification);
 
       GifticonExpirationAlertNoti gifticonExpirationAlertNoti = GifticonExpirationAlertNoti.create(notification.getId(), gifticon.getId(), 1);
-      entityManager.persist(gifticonExpirationAlertNoti);
+      em.persist(gifticonExpirationAlertNoti);
     }
 
-    tx.commit();
+    em.flush();
   }
 }
