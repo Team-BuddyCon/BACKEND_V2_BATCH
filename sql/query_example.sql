@@ -1,3 +1,4 @@
+-- Insert Data
 SELECT * FROM users;
 INSERT INTO users
 VALUES (null, null, null, null, 1, "email", null, "user1"),
@@ -58,6 +59,7 @@ VALUES (null, null, null, DATE_ADD(NOW(), INTERVAL + 0 DAY), "STARBUCKS", "CAFE"
        (null, null, null, DATE_ADD(NOW(), INTERVAL + 14 DAY), "STARBUCKS", "CAFE", "image", null, "14일 후", false, 7)
 ;
 
+-- Select Query
 SELECT g.gifticon_id,
        g.expire_date,
        g.name,
@@ -83,3 +85,17 @@ WHERE g.used = false
         OR (ns.the_day = true AND g.expire_date = DATE(NOW()))
     )
 ;
+
+SELECT *
+FROM gifticon_expiration_alert_noti
+         LEFT OUTER JOIN notification
+                         ON notification.notification_id =
+                            gifticon_expiration_alert_noti.gifticon_expiration_alert_noti_id;
+
+-- Truncate
+TRUNCATE TABLE announcement_noti;
+TRUNCATE TABLE gifticon;
+TRUNCATE TABLE gifticon_expiration_alert_noti;
+TRUNCATE TABLE notification;
+TRUNCATE TABLE notification_setting;
+TRUNCATE TABLE users;
