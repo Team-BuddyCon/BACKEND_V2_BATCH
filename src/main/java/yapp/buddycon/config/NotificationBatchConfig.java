@@ -9,10 +9,12 @@ import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
 import org.springframework.batch.core.launch.support.RunIdIncrementer;
+import org.springframework.batch.item.ItemWriter;
 import org.springframework.batch.item.database.JpaPagingItemReader;
 import org.springframework.batch.item.database.builder.JpaPagingItemReaderBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import yapp.buddycon.batch.CustomItemWriter;
 import yapp.buddycon.domain.Gifticon;
 
 @RequiredArgsConstructor
@@ -38,10 +40,7 @@ public class NotificationBatchConfig {
     return stepBuilderFactory.get("createGifticonExpirationAlertNotiStep")
         .<Gifticon, Gifticon>chunk(CHUNK_SIZE)
         .reader(jpaPagingItemReader())
-        .writer(items -> {
-          items.forEach(item -> System.out.println(item.toString()));
-          System.out.println("--------------");
-        })
+        .writer(customWriter())
         .build();
   }
 
@@ -77,7 +76,8 @@ public class NotificationBatchConfig {
         .build();
   }
 
-// INSERT INTO notification VALUES (NULL, NOW(), NOW(), "READY");
-// INSERT INTO gifticon_expiration_alert_noti VALUES (NULL, NOW(), NOW(), 1, :gifticonId, 1);
+  public ItemWriter<Gifticon> customWriter() {
+    return new CustomItemWriter(entityManagerFactory);
+  }
 
 }
