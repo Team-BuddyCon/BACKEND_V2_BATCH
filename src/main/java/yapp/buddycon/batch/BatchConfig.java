@@ -1,4 +1,4 @@
-package yapp.buddycon.config;
+package yapp.buddycon.batch;
 
 import java.time.LocalDate;
 import java.util.Map;
@@ -8,18 +8,15 @@ import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
-import org.springframework.batch.core.launch.support.RunIdIncrementer;
-import org.springframework.batch.item.ItemWriter;
 import org.springframework.batch.item.database.JpaPagingItemReader;
 import org.springframework.batch.item.database.builder.JpaPagingItemReaderBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import yapp.buddycon.batch.CustomItemWriter;
 import yapp.buddycon.domain.Gifticon;
 
 @RequiredArgsConstructor
 @Configuration
-public class NotificationBatchConfig {
+public class BatchConfig {
 
   private final JobBuilderFactory jobBuilderFactory;
   private final StepBuilderFactory stepBuilderFactory;
@@ -28,26 +25,25 @@ public class NotificationBatchConfig {
   private final int CHUNK_SIZE = 10;
 
   @Bean
-  public Job createGifticonExpirationAlertNotiJob() throws Exception {
-    return jobBuilderFactory.get("createGifticonExpirationAlertNotiJob")
-        .start(createGifticonExpirationAlertNotiStep())
-        .incrementer(new RunIdIncrementer())  // TODO 삭제
+  public Job createGifticonAlertJob() throws Exception {
+    return jobBuilderFactory.get("createGifticonAlertJob")
+        .start(createGifticonAlertStep())
         .build();
   }
 
   @Bean
-  public Step createGifticonExpirationAlertNotiStep() throws Exception {
-    return stepBuilderFactory.get("createGifticonExpirationAlertNotiStep")
+  public Step createGifticonAlertStep() throws Exception {
+    return stepBuilderFactory.get("createGifticonAlertStep")
         .<Gifticon, Gifticon>chunk(CHUNK_SIZE)
-        .reader(jpaPagingItemReader())
-        .writer(customWriter())
+        .reader(jpaPagingItemReaderForCreateGifticonAlertStep())
+        .writer(new CustomItemWriterForCreateGifticonAlertStep(entityManagerFactory))
         .build();
   }
 
   @Bean
-  public JpaPagingItemReader<Gifticon> jpaPagingItemReader() {
+  public JpaPagingItemReader<Gifticon> jpaPagingItemReaderForCreateGifticonAlertStep() {
     return new JpaPagingItemReaderBuilder<Gifticon>()
-        .name("jpaPagingItemReader")
+        .name("jpaPagingItemReaderForCreateGifticonAlertStep")
         .entityManagerFactory(entityManagerFactory)
         .pageSize(CHUNK_SIZE)
         .queryString("""
@@ -74,10 +70,6 @@ public class NotificationBatchConfig {
             "fourteenDaysAfter", LocalDate.now().plusDays(14)
         ))
         .build();
-  }
-
-  public ItemWriter<Gifticon> customWriter() {
-    return new CustomItemWriter(entityManagerFactory);
   }
 
 }

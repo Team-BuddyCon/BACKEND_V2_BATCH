@@ -5,19 +5,17 @@ import java.time.temporal.ChronoUnit;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import lombok.RequiredArgsConstructor;
 import org.springframework.batch.item.ItemWriter;
 import org.springframework.orm.jpa.EntityManagerFactoryUtils;
 import yapp.buddycon.domain.Gifticon;
 import yapp.buddycon.domain.GifticonExpirationAlertNoti;
 import yapp.buddycon.domain.Notification;
 
-public class CustomItemWriter implements ItemWriter<Gifticon> {
+@RequiredArgsConstructor
+public class CustomItemWriterForCreateGifticonAlertStep implements ItemWriter<Gifticon> {
 
   private final EntityManagerFactory emf;
-
-  public CustomItemWriter(EntityManagerFactory emf) {
-    this.emf = emf;
-  }
 
   @Override
   public void write(List<? extends Gifticon> items) throws Exception {
