@@ -52,6 +52,7 @@ public class BatchConfig {
                     INNER JOIN NotificationSetting ns
                         ON ns.userId = g.userId
                 WHERE g.used = false
+                  AND g.deleted = false
                   AND ns.activated = true
                   AND (
                     (ns.theDay = true AND g.expireDate = DATE(:today))

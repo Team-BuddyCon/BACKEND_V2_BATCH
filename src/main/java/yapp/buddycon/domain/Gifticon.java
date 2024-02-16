@@ -20,4 +20,5 @@ public class Gifticon {
   private String name;
   private LocalDate expireDate;
   private boolean used;
+  private boolean deleted;
 }
