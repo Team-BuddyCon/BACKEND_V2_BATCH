@@ -30,6 +30,7 @@ public class CustomItemWriterForCreateGifticonAlertStep implements ItemWriter<Gi
       LocalDate today = LocalDate.now();
       LocalDate expireDate = gifticon.getExpireDate();
       int daysLeft = (int) ChronoUnit.DAYS.between(today, expireDate);
+      log.info("today: {}, expireDate: {}, daysLeft: {}", today, expireDate, daysLeft);
 
       GifticonExpirationAlertNoti gifticonExpirationAlertNoti =
           GifticonExpirationAlertNoti.create(
