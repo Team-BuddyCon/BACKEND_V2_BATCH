@@ -6,12 +6,14 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.item.ItemWriter;
 import org.springframework.orm.jpa.EntityManagerFactoryUtils;
 import yapp.buddycon.domain.Gifticon;
 import yapp.buddycon.domain.GifticonExpirationAlertNoti;
 import yapp.buddycon.domain.Notification;
 
+@Slf4j
 @RequiredArgsConstructor
 public class CustomItemWriterForCreateGifticonAlertStep implements ItemWriter<Gifticon> {
 
@@ -36,6 +38,8 @@ public class CustomItemWriterForCreateGifticonAlertStep implements ItemWriter<Gi
               daysLeft
           );
       em.persist(gifticonExpirationAlertNoti);
+
+      log.info("add gifticon alert noti: {}", gifticon);
     }
 
     em.flush();
