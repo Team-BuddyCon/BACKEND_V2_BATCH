@@ -21,28 +21,38 @@ public class CustomItemWriterForCreateGifticonAlertStep implements ItemWriter<Gi
 
   @Override
   public void write(List<? extends Gifticon> items) throws Exception {
-    EntityManager em = EntityManagerFactoryUtils.getTransactionalEntityManager(emf);
-
+    log.info("<<<<<<<<<<>>>>>>>>>>");
+    log.info("<<<<<<<START>>>>>>");
+    log.info("<<<<<<<<<<>>>>>>>>>>");
     for (Gifticon gifticon : items) {
-      Notification notification = Notification.create();
-      em.persist(notification);
-
-      LocalDate today = LocalDate.now();
-      LocalDate expireDate = gifticon.getExpireDate();
-      int daysLeft = (int) ChronoUnit.DAYS.between(today, expireDate);
-      log.info("today: {}, expireDate: {}, daysLeft: {}", today, expireDate, daysLeft);
-
-      GifticonExpirationAlertNoti gifticonExpirationAlertNoti =
-          GifticonExpirationAlertNoti.create(
-              notification.getId(),
-              gifticon.getId(),
-              daysLeft
-          );
-      em.persist(gifticonExpirationAlertNoti);
-
-      log.info("add gifticon alert noti: {}", gifticon);
+      log.info("{{{" + gifticon.getId() + "}}}");
+      log.info(gifticon.toString());
     }
-
-    em.flush();
+    log.info("<<<<<<<<<<>>>>>>>>>>");
+    log.info("<<<<<<<END>>>>>>");
+    log.info("<<<<<<<<<<>>>>>>>>>>");
+//    EntityManager em = EntityManagerFactoryUtils.getTransactionalEntityManager(emf);
+//
+//    for (Gifticon gifticon : items) {
+//      Notification notification = Notification.create();
+//      em.persist(notification);
+//
+//      LocalDate today = LocalDate.now();
+//      LocalDate expireDate = gifticon.getExpireDate();
+//      int daysLeft = (int) ChronoUnit.DAYS.between(today, expireDate);
+//      log.info("today: {}, expireDate: {}, daysLeft: {}", today, expireDate, daysLeft);
+//
+//      GifticonExpirationAlertNoti gifticonExpirationAlertNoti =
+//          GifticonExpirationAlertNoti.create(
+//              notification.getId(),
+//              gifticon.getId(),
+//              daysLeft
+//          );
+//      em.persist(gifticonExpirationAlertNoti);
+//
+//      log.info("add gifticon alert noti: {}", gifticon);
+//    }
+//
+//    em.flush();
   }
 }
